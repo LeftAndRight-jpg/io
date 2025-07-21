@@ -1,0 +1,42 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define ld long double
+
+const int MX = 11007;
+const ld PI = acosl(-1.0L);
+int cnt, A[MX];
+
+ld solve_area(ld X, const vector<ld>& V){
+    ld T=0, U;
+    for(ld v: V){ U = X/(2*v); if(U<=1) T += 2*acosl(U); }
+    return T - 2*PI;
+}
+
+int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    
+    cin>>cnt;
+    vector<ld> P(cnt);
+    for(int i=0;i<cnt;i++) cin>>P[i];
+    
+    ld lo=0, hi=2000, mid;
+    for(int i=0;i<100;i++){
+        mid = (lo + hi) * 0.5L;
+        ld val = solve_area(mid, P);
+        (val>0? lo: hi) = mid;
+    }
+    
+    ld ans=0;
+    for(ld v: P){
+        ld h = mid/(2*v);
+        if(h>1) continue;
+        ld a = acosl(h);
+        ld phi = (PI - 2*a);
+        ld r2 = v*v;
+        ans += PI*r2 - (phi*r2 - sinl(phi)*r2);
+    }
+    
+    cout<<fixed<<setprecision(12)<<ans;
+    return 0;
+}
